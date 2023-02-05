@@ -1,4 +1,4 @@
-# Weather Pattern Predictor
+# Weather Forecaster
 
 A machine learning project that predicts future weather patterns based on historical data from the OpenWeatherMap API.
 
