@@ -16,3 +16,25 @@ class WeatherData:
             return (response.json()[0]["lat"], response.json()[0]["lon"])
         else:
             return None
+    
+    def fetch_history(self, lat, lon, start=None, end=None):
+        '''
+        Returns a dictionary of historical temperature data in the format {datetime:temperature}
+        '''
+        if start and end:
+            url = f"https://history.openweathermap.org/data/2.5/history/city?lat={lat}&lon={lon}&type=hour&start={start}&end={end}&appid={os.getenv('api_key')}"
+        else:
+            url = f"https://history.openweathermap.org/data/2.5/history/city?lat={lat}&lon={lon}&type=hour&appid={os.getenv('api_key')}"
+    
+        response = requests.get(url)
+        if response.status_code != 200:
+            return None
+        
+        temp_history = {}
+        for i in range(24):
+            dt = response.json()["list"][i]["dt"]
+            temp_C = round(response.json()["list"][i]["main"]["temp"] - 273.15, 2)
+
+            temp_history[dt] = temp_C
+
+        return temp_history
